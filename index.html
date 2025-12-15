@@ -198,12 +198,10 @@ canvas{position:absolute;inset:0;}
 <!-- COUNTDOWN -->
 <section id="countdownPage">
   <h1 class="titleText">Something Magic Is Almost Here Shasi 💖</h1>
-  <div class="countdown">
-    <div class="box"><h2 id="days">00</h2><p>Days</p></div>
-    <div class="box"><h2 id="hours">00</h2><p>Hours</p></div>
-    <div class="box"><h2 id="minutes">00</h2><p>Minutes</p></div>
-    <div class="box"><h2 id="seconds">00</h2><p>Seconds</p></div>
-  </div>
+<div id="simpleCountdown" class="titleText"
+     style="font-size:96px; margin:30px 0; opacity:0; transition:1s;">
+  3
+</div>
   <button id="startBtn" class="delayed">Start Journey ❤️</button>
 </section>
 
@@ -269,11 +267,6 @@ canvas{position:absolute;inset:0;}
 
 <script>
 // ELEMENTS
-const target = new Date("2026-01-01T00:00:00").getTime();
-const days = document.getElementById("days");
-const hours = document.getElementById("hours");
-const minutes = document.getElementById("minutes");
-const seconds = document.getElementById("seconds");
 const startBtn = document.getElementById("startBtn");
 const countdownPage = document.getElementById("countdownPage");
 const partyPage = document.getElementById("partyPage");
@@ -298,14 +291,37 @@ let candle = false;
 let current = 0;
 
 // COUNTDOWN
-setInterval(()=>{
-  const d = target - Date.now();
-  days.textContent = Math.floor(d/86400000);
-  hours.textContent = Math.floor(d%86400000/3600000);
-  minutes.textContent = Math.floor(d%3600000/60000);
-  seconds.textContent = Math.floor(d%60000/1000);
-},1000);
-setTimeout(()=>startBtn.classList.add("active"),4000);
+// SIMPLE 3-2-1 COUNTDOWN (slow start)
+const simpleCountdown = document.getElementById("simpleCountdown");
+let count = 3;
+
+// wait before starting countdown
+setTimeout(() => {
+
+  // show first number slowly
+  simpleCountdown.style.opacity = 1;
+  simpleCountdown.textContent = count;
+
+  const countdownInterval = setInterval(() => {
+    count--;
+
+    if (count > 0) {
+      simpleCountdown.textContent = count;
+    } else {
+      clearInterval(countdownInterval);
+
+      // fade out 1
+      simpleCountdown.style.opacity = 0;
+
+      // show Start Journey button
+      setTimeout(() => {
+        startBtn.classList.add("active");
+      }, 1200);
+    }
+  }, 1200); // speed between 3 → 2 → 1
+
+}, 2000); // ⏳ delay BEFORE 3 appears
+
 
 // PLAY MUSIC ON FIRST INTERACTION
 startBtn.addEventListener("click", ()=>{
