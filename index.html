@@ -2,10 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
-<!-- ✅ MOBILE VIEWPORT -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
 <title>Birthday Journey 🎉</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -183,73 +179,10 @@ canvas{position:absolute;inset:0;}
   50%{opacity:.2;}
 }
 
-/* =========================
-   MOBILE OPTIMIZATION
-   ========================= */
-@media (max-width:768px){
-
-  h1{font-size:28px !important;}
-  h2{font-size:22px !important;}
-  p{font-size:16px;}
-
-  button{
-    padding:12px 24px;
-    font-size:16px;
-  }
-
-  #simpleCountdown{
-    font-size:72px !important;
-  }
-
-  #journeyText{
-    font-size:30px;
-    padding:0 15px;
-    text-align:center;
-  }
-
-  #walkBtn,
-  .memory-btn{
-    right:50%;
-    transform:translateX(50%);
-    bottom:30px;
-  }
-
-  .hbText{
-    font-size:32px;
-    text-align:center;
-  }
-
-  #cakeImage{
-    width:220px;
-  }
-
-  .memory-slide{
-    flex-direction:column;
-    gap:25px;
-    padding:20px;
-  }
-
-  .memory-photo,
-  .memory-quote{
-    width:100%;
-    text-align:center;
-  }
-
-  .memory-quote{
-    font-size:22px;
-  }
-
-  #creditsPage h1{
-    font-size:30px;
-  }
-
-  #creditsPage p{
-    font-size:20px;
-  }
-
-  .blink-heart{
-    font-size:48px;
-  }
+/* MOBILE */
+@media(max-width:900px){
+  .memory-slide{flex-direction:column;}
+  .memory-photo,.memory-quote{width:100%;text-align:center;}
 }
 </style>
 </head>
@@ -259,12 +192,16 @@ canvas{position:absolute;inset:0;}
 <!-- BACKGROUND MUSIC -->
 <audio id="bgMusic" loop>
   <source src="assets/music/track2-piano.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
 </audio>
 
 <!-- COUNTDOWN -->
 <section id="countdownPage">
   <h1 class="titleText">Something Magic Is Almost Here Shasi 💖</h1>
-  <div id="simpleCountdown" class="titleText" style="font-size:96px;margin:30px 0;opacity:0;transition:1s;">3</div>
+<div id="simpleCountdown" class="titleText"
+     style="font-size:96px; margin:30px 0; opacity:0; transition:1s;">
+  3
+</div>
   <button id="startBtn" class="delayed">Start Journey ❤️</button>
 </section>
 
@@ -273,7 +210,7 @@ canvas{position:absolute;inset:0;}
   <canvas id="partyFireworks"></canvas>
   <div id="partyContent">
     <h1 class="titleText">Welcome to the Party 🎉</h1>
-    <p>Tonight belongs to you and your beautiful soul</p>
+    <p>Under glowing lights and endless smiles, tonight belongs to you and your beautiful soul</p>
     <button id="continueBtn" class="delayed">Continue →</button>
   </div>
 </section>
@@ -303,19 +240,19 @@ canvas{position:absolute;inset:0;}
 <!-- MEMORIES -->
 <section id="memoriesPage">
   <div class="memory-slide">
-    <div class="memory-quote titleText">You walked into my life quietly, and turned everything beautiful</div>
+    <div class="memory-quote titleText">You walked into my life quietly, and turned everything into something beautiful </div>
     <div class="memory-photo"><img src="assets/images/m1.jpg"></div>
   </div>
   <div class="memory-slide">
-    <div class="memory-quote titleText">With you, ordinary moments feel magical ✨</div>
+    <div class="memory-quote titleText">With you, even ordinary moments feel like memories worth keeping forever ✨</div>
     <div class="memory-photo"><img src="assets/images/m2.jpg"></div>
   </div>
   <div class="memory-slide">
-    <div class="memory-quote titleText">Your presence feels like peace 🌙</div>
+    <div class="memory-quote titleText">In a world full of noise, your presence feels like peace 🌙</div>
     <div class="memory-photo"><img src="assets/images/m3.jpg"></div>
   </div>
   <div class="memory-slide">
-    <div class="memory-quote titleText">My heart always finds its way back to you 💞</div>
+    <div class="memory-quote titleText">No matter where life takes us, my heart will always find its way back to you 💞 🌹</div>
     <div class="memory-photo"><img src="assets/images/m4.jpg"></div>
   </div>
   <button id="memoryNext" class="memory-btn delayed">Continue Journey →</button>
@@ -329,19 +266,172 @@ canvas{position:absolute;inset:0;}
 </section>
 
 <script>
+// ELEMENTS
 const startBtn = document.getElementById("startBtn");
+const countdownPage = document.getElementById("countdownPage");
+const partyPage = document.getElementById("partyPage");
+const continueBtn = document.getElementById("continueBtn");
+const journeyPage = document.getElementById("journeyPage");
+const journeyText = document.getElementById("journeyText");
+const walkBtn = document.getElementById("walkBtn");
+const birthdayPage = document.getElementById("birthdayPage");
+const hb1 = document.getElementById("hb1");
+const hb2 = document.getElementById("hb2");
+const birthdayNext = document.getElementById("birthdayNext");
+const cakeSection = document.getElementById("cakeSection");
+const cakeImage = document.getElementById("cakeImage");
+const cakeActionBtn = document.getElementById("cakeActionBtn");
+const memoriesPage = document.getElementById("memoriesPage");
+const memoryNext = document.getElementById("memoryNext");
+const creditsPage = document.getElementById("creditsPage");
+const slides = document.querySelectorAll(".memory-slide");
+const romanticParticles = document.getElementById("romanticParticles");
 const bgMusic = document.getElementById("bgMusic");
+let candle = false;
+let current = 0;
 
-setTimeout(()=>{
-  document.getElementById("simpleCountdown").style.opacity=1;
-  setTimeout(()=>startBtn.classList.add("active"),3500);
-},2000);
+// COUNTDOWN
+// SIMPLE 3-2-1 COUNTDOWN (slow start)
+const simpleCountdown = document.getElementById("simpleCountdown");
+let count = 3;
 
-startBtn.onclick=()=>{
+// wait before starting countdown
+setTimeout(() => {
+
+  // show first number slowly
+  simpleCountdown.style.opacity = 1;
+  simpleCountdown.textContent = count;
+
+  const countdownInterval = setInterval(() => {
+    count--;
+
+    if (count > 0) {
+      simpleCountdown.textContent = count;
+    } else {
+      clearInterval(countdownInterval);
+
+      // fade out 1
+      simpleCountdown.style.opacity = 0;
+
+      // show Start Journey button
+      setTimeout(() => {
+        startBtn.classList.add("active");
+      }, 1200);
+    }
+  }, 1200); // speed between 3 → 2 → 1
+
+}, 2000); // ⏳ delay BEFORE 3 appears
+
+
+// PLAY MUSIC ON FIRST INTERACTION
+startBtn.addEventListener("click", ()=>{
   bgMusic.play().catch(()=>{});
-  document.getElementById("countdownPage").style.display="none";
-  document.getElementById("partyPage").style.display="flex";
+});
+
+// PARTY
+startBtn.onclick = ()=>{
+  countdownPage.style.display="none";
+  partyPage.style.display="flex";
+  fireworks(document.getElementById("partyFireworks"));
+  setTimeout(()=>continueBtn.classList.add("active"),3000);
 };
+continueBtn.onclick = ()=>{
+  partyPage.style.display="none";
+  journeyPage.style.display="flex";
+  hearts();
+  setTimeout(()=>{
+    journeyText.style.opacity=1;
+    journeyText.style.transform="scale(1)";
+  },600);
+  setTimeout(()=>walkBtn.classList.add("active"),4000);
+};
+
+// JOURNEY -> BIRTHDAY
+walkBtn.onclick = ()=>{
+  journeyPage.style.display="none";
+  birthdayPage.style.display="flex";
+  fireworks(document.getElementById("birthdayFireworks"));
+  setTimeout(()=>hb1.style.opacity=1,600);
+  setTimeout(()=>hb2.style.opacity=1,1800);
+  setTimeout(()=>birthdayNext.classList.add("active"),4000);
+};
+birthdayNext.onclick = ()=>{
+  birthdayPage.style.display="none";
+  cakeSection.style.display="flex";
+};
+
+// CAKE
+cakeActionBtn.onclick = ()=>{
+  if(!candle){
+    cakeActionBtn.textContent="Lighting Candles ✨";
+    setTimeout(()=>{
+      cakeImage.src="assets/images/cake-candle.png";
+      cakeImage.classList.add("candle-lit");
+      cakeActionBtn.textContent="Continue Journey →";
+      candle=true;
+    },2500);
+  } else {
+    cakeSection.style.display="none";
+    memoriesPage.style.display="block";
+    showMemory(0);
+  }
+};
+
+// MEMORIES
+function showMemory(i){
+  slides.forEach(s=>s.style.display="none");
+  const slide = slides[i];
+  slide.style.display="flex";
+  const photo = slide.querySelector(".memory-photo");
+  const quote = slide.querySelector(".memory-quote");
+  photo.style.opacity=0;
+  quote.style.opacity=0;
+  memoryNext.classList.remove("active");
+  setTimeout(()=>{photo.style.opacity=1;photo.style.transform="translateX(0)";},500);
+  setTimeout(()=>{quote.style.opacity=1;quote.style.transform="translateX(0)";},3500);
+  setTimeout(()=>memoryNext.classList.add("active"),5500);
+}
+memoryNext.onclick = ()=>{
+  current++;
+  if(current<slides.length) showMemory(current);
+  else{
+    memoriesPage.style.display="none";
+    creditsPage.style.display="flex";
+    creditsPage.style.opacity=0;
+    setTimeout(()=>{creditsPage.style.transition="opacity 1.5s";creditsPage.style.opacity=1;},50);
+  }
+};
+
+// EFFECTS
+function fireworks(c){
+  const ctx=c.getContext("2d");
+  c.width=innerWidth;c.height=innerHeight;
+  const p=[];
+  setInterval(()=>{
+    const x=Math.random()*c.width,y=Math.random()*c.height/2;
+    for(let i=0;i<80;i++)
+      p.push({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,l:100});
+  },700);
+  (function a(){
+    ctx.clearRect(0,0,c.width,c.height);
+    p.forEach((e,i)=>{
+      e.x+=e.vx;e.y+=e.vy;e.l--;
+      ctx.fillStyle=`rgba(255,105,180,${e.l/100})`;
+      ctx.fillRect(e.x,e.y,2,2);
+      if(e.l<=0)p.splice(i,1);
+    });
+    requestAnimationFrame(a);
+  })();
+}
+function hearts(){
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heartParticle";
+    h.textContent="❤️";
+    romanticParticles.appendChild(h);
+    setTimeout(()=>h.remove(),8000);
+  },500);
+}
 </script>
 
 </body>
